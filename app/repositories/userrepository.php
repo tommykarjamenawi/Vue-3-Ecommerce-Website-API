@@ -146,6 +146,8 @@ class UserRepository extends Repository
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':password', $password);
             $stmt->execute();
+
+            return $stmt->rowCount();
         } catch (PDOException $e) {
             echo $e;
         }

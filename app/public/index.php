@@ -27,6 +27,7 @@ $router->get('/users/(\d+)', 'UserController@getById');
 $router->post('/users', 'UserController@register');
 $router->delete('/users/(\d+)', 'UserController@delete');
 $router->put('/users/(\d+)', 'UserController@update');
+$router->put('/users/(\d+)/password', 'UserController@updatePassword');
 
 // routes for the orders endpoint
 $router->get('/orders', 'OrderController@getAll');

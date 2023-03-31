@@ -242,18 +242,19 @@ class UserController extends Controller
         // update user
         $this->service->update($id, $postedUser);
 
-        $this->respond(array("message" => "User updated"));
+        $this->respond(array("message" => "User updated in the server"));
     }
 
     public function updatePassword() {
         $token = $this->checkForJwt();
         if (!$token) return;
 
-        // get id from url
-        $id = $this->getIdFromUrl();
+        // get id from /users/{id}/password
+        $url = $_SERVER['REQUEST_URI'];
+        $arr = explode("/", $url);
+        $id = $arr[2];
 
-        // read user data from request body
-        $postedUser = $this->createObjectFromPostedJson("Models\\User");
+        $newPassword = $this->createObjectFromPostedJson("Models\\passwordDTO");
 
         $updateOwnAccount = $token->data->id == $id;
         // check if user is admin or updating own account
@@ -263,12 +264,18 @@ class UserController extends Controller
         }
 
         // hash password
-        $postedUser->password = password_hash($postedUser->password, PASSWORD_DEFAULT);
-
+        $newPassword->password = password_hash($newPassword->password, PASSWORD_DEFAULT);
+        // $2y$10$SJGxkdiNknRpQppRiVoZa.dLKk5PKYGgxpTwcS7mi3VhebzYgrQIC == test
+        
         // update user
-        $this->service->updatePassword($id, $postedUser->password);
+        $result = $this->service->updatePassword($id, $newPassword->password);
+
+        // error if password didn't update
+        if (!$result) {
+            $this->respondWithError(500, "Password didn't update");
+            return;
+        }
 
         $this->respond(array("message" => "Password updated"));
     }
-
 }
