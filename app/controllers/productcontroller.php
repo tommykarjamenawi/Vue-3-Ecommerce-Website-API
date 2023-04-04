@@ -17,6 +17,7 @@ class ProductController extends Controller
 
     public function getAll()
     {
+        // No need to check for jwt token because this is a public route
         $offset = NULL;
         $limit = NULL;
 
@@ -32,53 +33,51 @@ class ProductController extends Controller
         $this->respond($products);
     }
 
-    // public function getOne($id)
-    // {
-    //     $product = $this->service->getOne($id);
+    public function getById($id)
+    {
+        // No need to check for jwt token because this is a public route
+        $product = $this->service->getById($id);
+        if (!$product) {
+            $this->respondWithError(404, "Product not found");
+            return;
+        }
+        $this->respond($product);
+    }
 
-    //     // we might need some kind of error checking that returns a 404 if the product is not found in the DB
-    //     if (!$product) {
-    //         $this->respondWithError(404, "Product not found");
-    //         return;
-    //     }
+    public function create()
+    {
+        try {
+            $product = $this->createObjectFromPostedJson("Models\\Product");
+            $product = $this->service->insert($product);
 
-    //     $this->respond($product);
-    // }
+        } catch (Exception $e) {
+            $this->respondWithError(500, $e->getMessage());
+        }
 
-    // public function create()
-    // {
-    //     try {
-    //         $product = $this->createObjectFromPostedJson("Models\\Product");
-    //         $product = $this->service->insert($product);
+        $this->respond($product);
+    }
 
-    //     } catch (Exception $e) {
-    //         $this->respondWithError(500, $e->getMessage());
-    //     }
+    public function update($id)
+    {
+        try {
+            $product = $this->createObjectFromPostedJson("Models\\Product");
+            $product = $this->service->update($product, $id);
 
-    //     $this->respond($product);
-    // }
+        } catch (Exception $e) {
+            $this->respondWithError(500, $e->getMessage());
+        }
 
-    // public function update($id)
-    // {
-    //     try {
-    //         $product = $this->createObjectFromPostedJson("Models\\Product");
-    //         $product = $this->service->update($product, $id);
+        $this->respond($product);
+    }
 
-    //     } catch (Exception $e) {
-    //         $this->respondWithError(500, $e->getMessage());
-    //     }
+    public function delete($id)
+    {
+        try {
+            $this->service->delete($id);
+        } catch (Exception $e) {
+            $this->respondWithError(500, $e->getMessage());
+        }
 
-    //     $this->respond($product);
-    // }
-
-    // public function delete($id)
-    // {
-    //     try {
-    //         $this->service->delete($id);
-    //     } catch (Exception $e) {
-    //         $this->respondWithError(500, $e->getMessage());
-    //     }
-
-    //     $this->respond(true);
-    // }
+        $this->respond(true);
+    }
 }

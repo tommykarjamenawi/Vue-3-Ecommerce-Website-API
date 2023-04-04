@@ -33,78 +33,69 @@ class ProductRepository extends Repository
         }
     }
 
-    // function getOne($id)
-    // {
-    //     try {
-    //         $query = "SELECT product.*, category.name as category_name FROM product INNER JOIN category ON product.category_id = category.id WHERE product.id = :id";
-    //         $stmt = $this->connection->prepare($query);
-    //         $stmt->bindParam(':id', $id);
-    //         $stmt->execute();
+    function getById($id)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT * FROM PRODUCTS WHERE id = :id");
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
 
-    //         $stmt->setFetchMode(PDO::FETCH_ASSOC);
-    //         $row = $stmt->fetch();
-    //         $product = $this->rowToProduct($row);
+            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Models\Product');
+            $product = $stmt->fetch();
 
-    //         return $product;
-    //     } catch (PDOException $e) {
-    //         echo $e;
-    //     }
-    // }
+            return $product;
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
 
-    // function rowToProduct($row) {
-    //     $product = new Product();
-    //     $product->id = $row['id'];
-    //     $product->name = $row['name'];
-    //     $product->price = $row['price'];
-    //     $product->description = $row['description'];
-    //     $product->image = $row['image'];
-    //     $product->category_id = $row['category_id'];
-    //     $category = new Category();
-    //     $category->id = $row['category_id'];
-    //     $category->name = $row['category_name'];
+    function insert($product)
+    {
+        try {
+            $stmt = $this->connection->prepare("INSERT into product (name, price, description, image, category_id) VALUES (?,?,?,?,?)");
 
-    //     $product->category = $category;
-    //     return $product;
-    // }
+            $stmt->execute([$product->name, $product->price, $product->description, $product->image, $product->category_id]);
 
-    // function insert($product)
-    // {
-    //     try {
-    //         $stmt = $this->connection->prepare("INSERT into product (name, price, description, image, category_id) VALUES (?,?,?,?,?)");
+            $product->id = $this->connection->lastInsertId();
 
-    //         $stmt->execute([$product->name, $product->price, $product->description, $product->image, $product->category_id]);
+            return $this->getById($product->id);
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
 
-    //         $product->id = $this->connection->lastInsertId();
+    function update($product, $id)
+    {
+        // update product  with name description image category brand price
+        try {
+            $stmt = $this->connection->prepare("UPDATE PRODUCTS SET name = :name, description = :description, image = :image, category = :category, brand = :brand, price = :price WHERE id = :id");
 
-    //         return $this->getOne($product->id);
-    //     } catch (PDOException $e) {
-    //         echo $e;
-    //     }
-    // }
+            $stmt->bindParam(':name', $product->name);
+            $stmt->bindParam(':price', $product->price);
+            $stmt->bindParam(':description', $product->description);
+            $stmt->bindParam(':image', $product->image);
+            $stmt->bindParam(':category', $product->category);
+            $stmt->bindParam(':brand', $product->brand);
+            $stmt->bindParam(':id', $id);
 
-    // function update($product, $id)
-    // {
-    //     try {
-    //         $stmt = $this->connection->prepare("UPDATE product SET name = ?, price = ?, description = ?, image = ?, category_id = ? WHERE id = ?");
+            $stmt->execute();
 
-    //         $stmt->execute([$product->name, $product->price, $product->description, $product->image, $product->category_id, $id]);
+            return $this->getById($id);
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
 
-    //         return $this->getOne($product->id);
-    //     } catch (PDOException $e) {
-    //         echo $e;
-    //     }
-    // }
-
-    // function delete($id)
-    // {
-    //     try {
-    //         $stmt = $this->connection->prepare("DELETE FROM product WHERE id = :id");
-    //         $stmt->bindParam(':id', $id);
-    //         $stmt->execute();
-    //         return;
-    //     } catch (PDOException $e) {
-    //         echo $e;
-    //     }
-    //     return true;
-    // }
+    function delete($id)
+    {
+        try {
+            $stmt = $this->connection->prepare("DELETE FROM product WHERE id = :id");
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            return;
+        } catch (PDOException $e) {
+            echo $e;
+        }
+        return true;
+    }
 }
