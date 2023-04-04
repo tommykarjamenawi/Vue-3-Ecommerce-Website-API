@@ -49,16 +49,22 @@ class ProductRepository extends Repository
         }
     }
 
-    function insert($product)
+    function create($product)
     {
+        // create product  with name description image category brand price
         try {
-            $stmt = $this->connection->prepare("INSERT into product (name, price, description, image, category_id) VALUES (?,?,?,?,?)");
+            $stmt = $this->connection->prepare("INSERT INTO PRODUCTS (name, description, image, category, brand, price) VALUES (:name, :description, :image, :category, :brand, :price)");
 
-            $stmt->execute([$product->name, $product->price, $product->description, $product->image, $product->category_id]);
+            $stmt->bindParam(':name', $product->name);
+            $stmt->bindParam(':price', $product->price);
+            $stmt->bindParam(':description', $product->description);
+            $stmt->bindParam(':image', $product->image);
+            $stmt->bindParam(':category', $product->category);
+            $stmt->bindParam(':brand', $product->brand);
 
-            $product->id = $this->connection->lastInsertId();
+            $stmt->execute();
 
-            return $this->getById($product->id);
+            return $this->getById($this->connection->lastInsertId());
         } catch (PDOException $e) {
             echo $e;
         }
@@ -89,7 +95,7 @@ class ProductRepository extends Repository
     function delete($id)
     {
         try {
-            $stmt = $this->connection->prepare("DELETE FROM product WHERE id = :id");
+            $stmt = $this->connection->prepare("DELETE FROM PRODUCTS WHERE id = :id");
             $stmt->bindParam(':id', $id);
             $stmt->execute();
             return;

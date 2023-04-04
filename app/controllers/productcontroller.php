@@ -48,7 +48,7 @@ class ProductController extends Controller
     {
         try {
             $product = $this->createObjectFromPostedJson("Models\\Product");
-            $product = $this->service->insert($product);
+            $product = $this->service->create($product);
 
         } catch (Exception $e) {
             $this->respondWithError(500, $e->getMessage());

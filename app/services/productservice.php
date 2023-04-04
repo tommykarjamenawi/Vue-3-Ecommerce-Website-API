@@ -20,8 +20,8 @@ class ProductService {
         return $this->repository->getById($id);
     }
 
-    public function insert($item) {       
-        return $this->repository->insert($item);        
+    public function create($item) {       
+        return $this->repository->create($item);        
     }
 
     public function update($item, $id) {       
