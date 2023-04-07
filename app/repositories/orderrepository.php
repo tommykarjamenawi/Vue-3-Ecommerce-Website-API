@@ -17,7 +17,8 @@ class OrderRepository extends Repository
             $stmt->execute();
 
             $stmt->setFetchMode(PDO::FETCH_CLASS, 'Models\\Order');
-            return $stmt->fetchAll();
+            $orders = $stmt->fetchAll();
+            return $orders;
         } catch (PDOException $e) {
             echo $e;
         }

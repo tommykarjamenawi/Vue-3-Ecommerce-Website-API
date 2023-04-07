@@ -33,9 +33,10 @@ class ProductController extends Controller
         $this->respond($products);
     }
 
-    public function getById($id)
+    public function getById()
     {
         // No need to check for jwt token because this is a public route
+        $id = $this->getIdFromUrl();
         $product = $this->service->getById($id);
         if (!$product) {
             $this->respondWithError(404, "Product not found");
@@ -46,6 +47,15 @@ class ProductController extends Controller
 
     public function create()
     {
+        $token = $this->checkForJwt();
+        if (!$token) return;
+
+        // check admin privileges
+        if ($token->data->role != 1) {
+            $this->respondWithError(401, "Unauthorized");
+            return;
+        }
+
         try {
             $product = $this->createObjectFromPostedJson("Models\\Product");
             $product = $this->service->create($product);
@@ -59,6 +69,15 @@ class ProductController extends Controller
 
     public function update($id)
     {
+        $token = $this->checkForJwt();
+        if (!$token) return;
+
+        // check admin privileges
+        if ($token->data->role != 1) {
+            $this->respondWithError(401, "Unauthorized");
+            return;
+        }
+
         try {
             $product = $this->createObjectFromPostedJson("Models\\Product");
             $product = $this->service->update($product, $id);
@@ -72,6 +91,15 @@ class ProductController extends Controller
 
     public function delete($id)
     {
+        $token = $this->checkForJwt();
+        if (!$token) return;
+
+        // check admin privileges
+        if ($token->data->role != 1) {
+            $this->respondWithError(401, "Unauthorized");
+            return;
+        }
+        
         try {
             $this->service->delete($id);
         } catch (Exception $e) {

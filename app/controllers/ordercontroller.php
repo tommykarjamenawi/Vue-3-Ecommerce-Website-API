@@ -24,7 +24,7 @@ class OrderController extends Controller
         if(isset($_GET['user_id'])) {
             $userId = $_GET['user_id'];
             // check if user is admin or if user is the same as the user_id
-            if ($token->data->role != 1 || $token->data->id != $userId) {
+            if ($token->data->role != 1 && $token->data->id != $userId) {
                 $this->respondWithError(401, "Unauthorized");
                 return;
             }
@@ -46,8 +46,11 @@ class OrderController extends Controller
     // get all products from a single order
     public function getOne()
     {
+        // check if user is logged in
         $token = $this->checkForJwt();
         if (!$token) return;
+
+        // all logged in users can get all products from a single order (no admin privileges needed) 
 
         $orderId = $this->getIdFromUrl();
     

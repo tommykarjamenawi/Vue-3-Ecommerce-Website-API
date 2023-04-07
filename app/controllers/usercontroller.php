@@ -135,8 +135,8 @@ class UserController extends Controller
         $token = $this->checkForJwt();
         if (!$token) return;
 
-        // check if user is admin
-        if ($token->data->role != 1) {
+        // check if user is admin or if user is requesting his own data
+        if ($token->data->role != 1 && $token->data->id != $this->getIdFromUrl()) {
             $this->respondWithError(401, "Unauthorized");
             return;
         }
