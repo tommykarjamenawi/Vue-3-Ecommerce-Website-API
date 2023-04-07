@@ -124,9 +124,9 @@ CREATE TABLE `USERS` (
 --
 
 INSERT INTO `USERS` (`id`, `full_name`, `email`, `password`, `address`, `role`, `image`) VALUES
-(1, 'tommy karja', 'tk@shop.nl', '$2y$10$SJGxkdiNknRpQppRiVoZa.dLKk5PKYGgxpTwcS7mi3VhebzYgrQIC', NULL, 2, '/img/defaultprofile.jpg'),
-(8, 'test tester', 'test@shop.nl', '$2y$10$fB8Q11HbCqOMN.DFShiv2uWMPkAx81ECqZunkaOLJ/LT3QN1RcmxC', NULL, 1, '/img/defaultprofile.jpg'),
-(10, 'edit me', 'edit@shop.nl', '$2y$10$7qQWGYenoxg3gDpFLIKvrOQHAebG.DcqTIF5L4.4qhS1jDvDGgeR6', 'Haarlem1', 1, '/img/defaultprofile.jpg');
+(1, 'tommy karja', 'tk@shop.nl', '$2y$10$SJGxkdiNknRpQppRiVoZa.dLKk5PKYGgxpTwcS7mi3VhebzYgrQIC', 'Haarlem1', 1, '/img/defaultprofile.jpg'),
+(8, 'test tester', 'test@shop.nl', '$2y$10$fB8Q11HbCqOMN.DFShiv2uWMPkAx81ECqZunkaOLJ/LT3QN1RcmxC', 'Haarlem1', 2, '/img/defaultprofile.jpg'),
+(10, 'edit me', 'edit@shop.nl', '$2y$10$7qQWGYenoxg3gDpFLIKvrOQHAebG.DcqTIF5L4.4qhS1jDvDGgeR6', 'Haarlem1', 2, '/img/defaultprofile.jpg');
 
 --
 -- Indexen voor geëxporteerde tabellen
