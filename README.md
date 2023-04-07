@@ -5,5 +5,7 @@
 * Password: "test"
 
 ### Customer
-* Username: "test@shop.nl"
-* Password: "test"
+* Username: "edit@shop.nl"
+* Password: "test" or "test123"
+
+or create your own account.
