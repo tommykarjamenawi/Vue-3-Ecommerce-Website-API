@@ -25,7 +25,7 @@ class UserController extends Controller
         $user = $this->service->checkUsernamePassword($postedUser->email, $postedUser->password);
 
         // if the method returned false, the username and/or password were incorrect
-        if(!$user) {
+        if($user == null) {
             $this->respondWithError(401, "Invalid login");
             return;
         }
